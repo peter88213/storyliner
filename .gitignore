@@ -1,0 +1,6 @@
+/src/locale/
+/test/work/
+/test/storyliner.py
+/build/
+*.pyc
+*.bak
