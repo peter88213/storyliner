@@ -1,0 +1,49 @@
+<!ELEMENT stlx (BOOKS, CHARACTERS)>
+    <!ATTLIST stlx 
+        version NMTOKEN #FIXED "1.0"
+        >
+    <!ELEMENT BOOKS (BOOK*)>
+        <!ELEMENT BOOK (Title?, Desc?, Path, ARCS)>
+        <!ATTLIST BOOK 
+            id ID #REQUIRED 
+            >
+            <!ELEMENT Title (#PCDATA)>
+            <!ELEMENT Desc (p*)>
+            <!ELEMENT p (#PCDATA)>     
+            <!ELEMENT Path (#PCDATA)>
+            <!ELEMENT ARCS (ARC*)>
+                <!ELEMENT ARC (Title?, ShortName?, Desc?, Sections?, POINT*)>            
+                    <!ATTLIST ARC 
+                        id ID #REQUIRED
+                        >
+                    <!ELEMENT ShortName (#PCDATA)>
+                    <!ELEMENT Sections EMPTY>
+                        <!ATTLIST Sections 
+                            ids IDREFS #REQUIRED
+                            >
+                    <!ELEMENT POINT (Title?, Desc?, Section?)>
+                        <!ATTLIST POINT 
+                            id ID #REQUIRED
+                            >
+                        <!ELEMENT Section EMPTY>
+                            <!ATTLIST Section 
+                                id IDREF #REQUIRED
+                                >
+	<!ELEMENT CHARACTERS (CHARACTER*)>
+		<!ELEMENT CHARACTER (Title?, FullName?, Aka?, Desc?, 
+			Bio?, Goals?, Notes?, Tags?, BirthDate?, DeathDate?, Link*)>
+			<!ATTLIST CHARACTER 
+				id ID #REQUIRED
+				>
+	        <!ELEMENT FullName (#PCDATA)>
+	        <!ELEMENT Aka (#PCDATA)>
+	        <!ELEMENT Bio (p*)>
+	        <!ELEMENT Goals (p*)>
+	        <!ELEMENT Notes (p*)>
+	        <!ELEMENT Tags (#PCDATA)>
+	        <!ELEMENT BirthDate (#PCDATA)>
+	        <!ELEMENT DeathDate (#PCDATA)>
+	        <!ELEMENT Link (Title?)>
+				<!ATTLIST Link
+					path NMTOKEN #REQUIRED
+					>
