@@ -8,8 +8,8 @@ from tkinter import ttk
 
 from storylinerlib.storyliner_globals import prefs
 from storylinerlib.widgets.drag_drop_listbox import DragDropListbox
-from novxlib.novx_globals import _
-from novxlib.novx_globals import list_to_string
+from storylinerlib.storyliner_globals import _
+from storylinerlib.storyliner_globals import list_to_string
 import tkinter as tk
 
 
@@ -41,22 +41,6 @@ class ViewOptionsWindow(tk.Toplevel):
         ttk.Separator(window, orient='vertical').pack(fill='y', padx=10, side='left')
         frame2 = ttk.Frame(window)
         frame2.pack(fill='both', side='left')
-
-        # Combobox for coloring mode setting.
-        self._coloringModeStr = tk.StringVar(value=self._ui.tv.COLORING_MODES[self._ui.tv.coloringMode])
-        self._coloringModeStr.trace('w', self._change_colors)
-        ttk.Label(
-            frame1,
-            text=_('Coloring mode')
-            ).pack(padx=5, pady=5, anchor='w')
-        ttk.Combobox(
-            frame1,
-            textvariable=self._coloringModeStr,
-            values=self._ui.tv.COLORING_MODES,
-            width=20
-            ).pack(padx=5, pady=5, anchor='w')
-
-        ttk.Separator(frame1, orient='horizontal').pack(fill='x', pady=10)
 
         # Checkbox for large toolbar buttons.
 

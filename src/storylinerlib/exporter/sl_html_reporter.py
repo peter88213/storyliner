@@ -9,10 +9,6 @@ import os
 from novxlib.converter.export_target_factory import ExportTargetFactory
 from novxlib.file.doc_open import open_document
 from novxlib.html.html_characters import HtmlCharacters
-from novxlib.html.html_items import HtmlItems
-from novxlib.html.html_locations import HtmlLocations
-from novxlib.html.html_plot_list import HtmlPlotList
-from novxlib.html.html_project_notes import HtmlProjectNotes
 
 
 class SlHtmlReporter:
@@ -24,10 +20,6 @@ class SlHtmlReporter:
     """
     EXPORT_TARGET_CLASSES = [
         HtmlCharacters,
-        HtmlLocations,
-        HtmlItems,
-        HtmlPlotList,
-        HtmlProjectNotes,
         ]
 
     def __init__(self):
@@ -53,7 +45,7 @@ class SlHtmlReporter:
         # (the target factory sets the project directory; this is overridden here).
         __, filename = os.path.split(target.filePath)
         target.filePath = f'{tempdir}/{filename}'
-        target.novel = source.novel
+        target.story = source.story
         target.write()
         open_document(target.filePath)
 

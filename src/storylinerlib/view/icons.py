@@ -47,10 +47,6 @@ class Icons:
         except:
             self.gotoIcon = None
         try:
-            self.lockIcon = tk.PhotoImage(file=f'{iconPath}/lock.png')
-        except:
-            self.lockIcon = None
-        try:
             self.manuscriptIcon = tk.PhotoImage(file=f'{iconPath}/manuscript.png')
         except:
             self.manuscriptIcon = None
@@ -87,9 +83,9 @@ class Icons:
         except:
             self.viewItemsIcon = None
         try:
-            self.viewLocationsIcon = tk.PhotoImage(file=f'{iconPath}/viewLocations.png')
+            self.viewBooksIcon = tk.PhotoImage(file=f'{iconPath}/viewBooks.png')
         except:
-            self.viewLocationsIcon = None
+            self.viewBooksIcon = None
         try:
             self.viewProjectnotesIcon = tk.PhotoImage(file=f'{iconPath}/viewProjectnotes.png')
         except:

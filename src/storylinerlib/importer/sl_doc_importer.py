@@ -12,10 +12,10 @@ from novxlib.converter.import_target_factory import ImportTargetFactory
 from novxlib.converter.new_project_factory import NewProjectFactory
 from novxlib.model.novel import Novel
 from novxlib.model.nv_tree import NvTree
-from novxlib.novx.novx_file import NovxFile
-from novxlib.novx_globals import Error
-from novxlib.novx_globals import _
-from novxlib.novx_globals import norm_path
+from novxlib.novx.stlx_file import NovxFile
+from storylinerlib.storyliner_globals import Error
+from storylinerlib.storyliner_globals import _
+from storylinerlib.storyliner_globals import norm_path
 from novxlib.ods.ods_r_charlist import OdsRCharList
 from novxlib.ods.ods_r_itemlist import OdsRItemList
 from novxlib.ods.ods_r_loclist import OdsRLocList
@@ -23,7 +23,7 @@ from novxlib.ods.ods_r_sectionlist import OdsRSectionList
 from novxlib.odt.odt_r_chapterdesc import OdtRChapterDesc
 from novxlib.odt.odt_r_characters import OdtRCharacters
 from novxlib.odt.odt_r_items import OdtRItems
-from novxlib.odt.odt_r_locations import OdtRLocations
+from novxlib.odt.odt_r_books import OdtRBooks
 from novxlib.odt.odt_r_manuscript import OdtRManuscript
 from novxlib.odt.odt_r_partdesc import OdtRPartDesc
 from novxlib.odt.odt_r_proof import OdtRProof
@@ -44,7 +44,7 @@ class SlDocImporter:
         OdtRPartDesc,
         OdtRCharacters,
         OdtRItems,
-        OdtRLocations,
+        OdtRBooks,
         OdsRCharList,
         OdsRLocList,
         OdsRItemList,
@@ -83,9 +83,9 @@ class SlDocImporter:
                 raise Error(f'!{_("File already exists")}: "{norm_path(target.filePath)}".')
 
             self._check(source, target)
-            source.novel = Novel(tree=NvTree())
+            source.story = Novel(tree=NvTree())
             source.read()
-            target.novel = source.novel
+            target.story = source.story
             target.write()
             self.newFile = target.filePath
             return f'{_("File written")}: "{norm_path(target.filePath)}".'
@@ -96,11 +96,11 @@ class SlDocImporter:
             __, target = self.importTargetFactory.make_file_objects(sourcePath, **kwargs)
             self.newFile = None
             self._check(source, target)
-            target.novel = Novel(tree=NvTree())
+            target.story = Novel(tree=NvTree())
             target.read()
-            source.novel = target.novel
+            source.story = target.story
             source.read()
-            target.novel = source.novel
+            target.story = source.story
             target.write()
             message = f'{_("File written")}: "{norm_path(target.filePath)}".'
             self.newFile = target.filePath

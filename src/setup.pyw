@@ -66,8 +66,8 @@ python3 '$Apppath' %f
 ADD_TO_REGISTRY = f'''Windows Registry Editor Version 5.00
 
 [-HKEY_CURRENT_USER\Software\Classes\\storyliner]
-[-HKEY_CURRENT_USER\Software\Classes\\.novx]
-[HKEY_CURRENT_USER\Software\Classes\\.novx]
+[-HKEY_CURRENT_USER\Software\Classes\\.stlx]
+[HKEY_CURRENT_USER\Software\Classes\\.stlx]
 "Content Type"="text/xml"
 @="storyliner"
 [HKEY_CURRENT_USER\Software\Classes\\storyliner]
@@ -89,7 +89,7 @@ ADD_TO_REGISTRY = f'''Windows Registry Editor Version 5.00
 REMOVE_FROM_REGISTRY = f'''Windows Registry Editor Version 5.00
 
 [-HKEY_CURRENT_USER\Software\Classes\\storyliner]
-[-HKEY_CURRENT_USER\Software\Classes\\.novx]
+[-HKEY_CURRENT_USER\Software\Classes\\.stlx]
 
 '''
 

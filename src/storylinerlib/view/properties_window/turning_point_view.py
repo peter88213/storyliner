@@ -7,9 +7,10 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 from tkinter import ttk
 
 from storylinerlib.view.properties_window.basic_view import BasicView
-from novxlib.novx_globals import CH_ROOT
-from novxlib.novx_globals import SECTION_PREFIX
-from novxlib.novx_globals import _
+from storylinerlib.widgets.collection_box import CollectionBox
+from storylinerlib.storyliner_globals import BK_ROOT
+from storylinerlib.storyliner_globals import BOOK_PREFIX
+from storylinerlib.storyliner_globals import _
 import tkinter as tk
 
 
@@ -17,9 +18,10 @@ class TurningPointView(BasicView):
     """Class for viewing and editing turning points.
 
     Adds to the right pane:
-    - A label showing section associated with the turnong point. 
-    - A button bar for managing the section assignments.
+    - A label showing book associated with the turnong point. 
+    - A button bar for managing the book assignments.
     """
+    _HEIGHT_LIMIT = 10
 
     def __init__(self, parent, model, view, controller):
         """Initialize the view once before element data is available.
@@ -42,22 +44,23 @@ class TurningPointView(BasicView):
 
         ttk.Separator(self._elementInfoWindow, orient='horizontal').pack(fill='x')
 
-        # Associated section display.
-        self._sectionFrame = ttk.Frame(self._elementInfoWindow)
-        self._sectionFrame.pack(anchor='w', fill='x')
-        ttk.Label(self._sectionFrame, text=f"{_('Section')}:").pack(anchor='w')
-        self.sectionAssocTitle = tk.Label(self._sectionFrame, anchor='w', bg='white')
-        self.sectionAssocTitle.pack(anchor='w', pady=2, fill='x')
-
-        self._assignSectionButton = ttk.Button(self._sectionFrame, text=_('Assign section'), command=self._pick_section)
-        self._assignSectionButton.pack(side='left', fill='x', expand=True)
-        inputWidgets.append(self._assignSectionButton)
-
-        self._clearAssignmentButton = ttk.Button(self._sectionFrame, text=_('Clear assignment'), command=self._clear_assignment)
-        self._clearAssignmentButton.pack(side='left', fill='x', expand=True)
-        inputWidgets.append(self._clearAssignmentButton)
-
-        ttk.Button(self._sectionFrame, text=_('Go to section'), command=self._select_assigned_section).pack(side='left', fill='x', expand=True)
+        # 'Books' listbox.
+        self._bkTitles = ''
+        self._bookLabel = ttk.Label(self._elementInfoWindow, text=_('Books'))
+        self._bookLabel.pack(anchor='w')
+        self._bookCollection = CollectionBox(
+            self._elementInfoWindow,
+            cmdAdd=self._pick_book,
+            cmdRemove=self._remove_book,
+            cmdOpen=self._go_to_book,
+            cmdActivate=self._activate_book_buttons,
+            lblOpen=_('Go to'),
+            iconAdd=self._ui.icons.addIcon,
+            iconRemove=self._ui.icons.removeIcon,
+            iconOpen=self._ui.icons.gotoIcon
+            )
+        self._bookCollection.pack(fill='x')
+        inputWidgets.extend(self._bookCollection.inputWidgets)
 
         for widget in inputWidgets:
             self._inputWidgets.append(widget)
@@ -67,45 +70,35 @@ class TurningPointView(BasicView):
         
         Extends the superclass constructor.
         """
-        self._element = self._mdl.novel.turningPoints[elementId]
+        self._element = self._mdl.story.turningPoints[elementId]
         super().set_data(elementId)
 
-        # Associated section display.
-        try:
-            sectionTitle = self._mdl.novel.sections[self._element.sectionAssoc].title
-        except:
-            sectionTitle = ''
-        self.sectionAssocTitle['text'] = sectionTitle
+        # 'Books' window.
+        self._bkTitles = self._get_element_titles(self._element.books, self._mdl.story.books)
+        self._bookCollection.cList.set(self._bkTitles)
+        listboxSize = len(self._bkTitles)
+        if listboxSize > self._HEIGHT_LIMIT:
+            listboxSize = self._HEIGHT_LIMIT
+        self._bookCollection.cListbox.config(height=listboxSize)
+        if not self._bookCollection.cListbox.curselection() or not self._bookCollection.cListbox.focus_get():
+            self._bookCollection.deactivate_buttons()
 
-    def _assign_section(self, event=None):
-        """Associate the selected section with the Turning point.
-        
-        End the picking mode after the section is assigned.
-        """
-        nodeId = self._ui.tv.tree.selection()[0]
-        if nodeId.startswith(SECTION_PREFIX):
-            if self._mdl.novel.sections[nodeId].scType == 0:
-                self._clear_assignment()
-                # Associate the point with the section.
-                acId = self._ui.tv.tree.parent(self._elementId)
-                arcSections = self._mdl.novel.arcs[acId].sections
-                if arcSections is None:
-                    arcSections = [nodeId]
-                elif not nodeId in arcSections:
-                    arcSections.append(nodeId)
-                self._mdl.novel.arcs[acId].sections = arcSections
-                self._mdl.novel.sections[nodeId].scTurningPoints[self._elementId] = acId
-                if not acId in self._mdl.novel.sections[nodeId].scArcs:
-                    self._mdl.novel.sections[nodeId].scArcs.append(acId)
-                self._element.sectionAssoc = nodeId
-        self._end_picking_mode()
+    def _activate_book_buttons(self, event=None):
+        if self._element.books:
+            self._bookCollection.activate_buttons()
+        else:
+            self._bookCollection.deactivate_buttons()
 
-    def _clear_assignment(self):
-        """Unassign a section from the Turning point."""
-        scId = self._element.sectionAssoc
-        if scId is not None:
-            del(self._mdl.novel.sections[scId].scTurningPoints[self._elementId])
-            self._element.sectionAssoc = None
+    def _add_book(self, event=None):
+        # Add the selected element to the collection, if applicable.
+        bkList = self._element.books
+        bkId = self._ui.tv.tree.selection()[0]
+        if not bkId.startswith(BOOK_PREFIX):
+            # Restore the previous section selection mode.
+            self._end_picking_mode()
+        elif not bkId in bkList:
+            bkList.append(bkId)
+            self._element.books = bkList
 
     def _create_frames(self):
         """Template method for creating the frames in the right pane."""
@@ -114,16 +107,48 @@ class TurningPointView(BasicView):
         self._create_notes_window()
         self._create_button_bar()
 
-    def _select_assigned_section(self):
-        """Select the section assigned to the turning point."""
-        if self._element.sectionAssoc is not None:
-            targetNode = self._element.sectionAssoc
-            self._ui.tv.tree.see(targetNode)
-            self._ui.tv.tree.selection_set(targetNode)
+    def _get_element_titles(self, elemIds, elements):
+        """Return a list of element titles.
+        
+        Positional arguments:
+            elemIds -- list of element IDs.
+            elements -- list of element objects.          
+        """
+        elemTitles = []
+        if elemIds:
+            for elemId in elemIds:
+                try:
+                    elemTitles.append(elements[elemId].title)
+                except:
+                    pass
+        return elemTitles
 
-    def _pick_section(self):
-        """Enter the "associate section" selection mode."""
+    def _go_to_book(self, event=None):
+        """Go to the book selected in the listbox."""
+        try:
+            selection = self._bookCollection.cListbox.curselection()[0]
+        except:
+            return
+
+        self._ui.tv.go_to_node(self._element.books[selection])
+
+    def _pick_book(self, event=None):
+        """Enter the "add book" selection mode."""
         self._start_picking_mode()
-        self._ui.tv.tree.bind('<<TreeviewSelect>>', self._assign_section)
-        self._ui.tv.tree.see(CH_ROOT)
+        self._ui.tv.tree.bind('<<TreeviewSelect>>', self._add_book)
+        self._ui.tv.tree.see(BK_ROOT)
+
+    def _remove_book(self, event=None):
+        """Remove the book selected in the listbox from the section books."""
+        try:
+            selection = self._bookCollection.cListbox.curselection()[0]
+        except:
+            return
+
+        bkId = self._element.books[selection]
+        title = self._mdl.novel.books[bkId].title
+        if self._ui.ask_yes_no(f'{_("Remove book")}: "{title}"?'):
+            bkList = self._element.books
+            del bkList[selection]
+            self._element.books = bkList
 

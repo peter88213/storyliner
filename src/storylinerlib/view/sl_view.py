@@ -15,36 +15,19 @@ from storylinerlib.view.properties_window.properties_viewer import PropertiesVie
 from storylinerlib.view.toolbar import Toolbar
 from storylinerlib.view.tree_window.tree_viewer import TreeViewer
 from storylinerlib.view.view_options_window import ViewOptionsWindow
-from novxlib.novx_globals import AC_ROOT
-from novxlib.novx_globals import BRF_SYNOPSIS_SUFFIX
-from novxlib.novx_globals import CHAPTERS_SUFFIX
-from novxlib.novx_globals import CHARACTERS_SUFFIX
-from novxlib.novx_globals import CHARACTER_PREFIX
-from novxlib.novx_globals import CHARACTER_REPORT_SUFFIX
-from novxlib.novx_globals import CHARLIST_SUFFIX
-from novxlib.novx_globals import CH_ROOT
-from novxlib.novx_globals import CR_ROOT
-from novxlib.novx_globals import DATA_SUFFIX
-from novxlib.novx_globals import ITEMLIST_SUFFIX
-from novxlib.novx_globals import ITEMS_SUFFIX
-from novxlib.novx_globals import ITEM_PREFIX
-from novxlib.novx_globals import ITEM_REPORT_SUFFIX
-from novxlib.novx_globals import IT_ROOT
-from novxlib.novx_globals import LC_ROOT
-from novxlib.novx_globals import LOCATIONS_SUFFIX
-from novxlib.novx_globals import LOCATION_PREFIX
-from novxlib.novx_globals import LOCATION_REPORT_SUFFIX
-from novxlib.novx_globals import LOCLIST_SUFFIX
-from novxlib.novx_globals import MANUSCRIPT_SUFFIX
-from novxlib.novx_globals import PARTS_SUFFIX
-from novxlib.novx_globals import PLOTLIST_SUFFIX
-from novxlib.novx_globals import PLOT_SUFFIX
-from novxlib.novx_globals import PN_ROOT
-from novxlib.novx_globals import PROOF_SUFFIX
-from novxlib.novx_globals import SECTIONLIST_SUFFIX
-from novxlib.novx_globals import SECTIONS_SUFFIX
-from novxlib.novx_globals import XREF_SUFFIX
-from novxlib.novx_globals import _
+from storylinerlib.storyliner_globals import AC_ROOT
+from storylinerlib.storyliner_globals import CHARACTER_PREFIX
+from storylinerlib.storyliner_globals import CR_ROOT
+from storylinerlib.storyliner_globals import BK_ROOT
+from storylinerlib.storyliner_globals import BOOK_PREFIX
+from storylinerlib.storyliner_globals import CHARACTERS_SUFFIX
+from storylinerlib.storyliner_globals import CHARLIST_SUFFIX
+from storylinerlib.storyliner_globals import BOOKS_SUFFIX
+from storylinerlib.storyliner_globals import BOOKLIST_SUFFIX
+from storylinerlib.storyliner_globals import PLOT_SUFFIX
+from storylinerlib.storyliner_globals import PLOTLIST_SUFFIX
+
+from storylinerlib.storyliner_globals import _
 from novxlib.ui.set_icon_tk import set_icon
 import tkinter as tk
 
@@ -138,7 +121,7 @@ class SlView:
         self.leftFrame = ttk.Frame(self.appWindow)
         self.leftFrame.pack(side='left', expand=True, fill='both')
 
-        #--- Create a novel tree window in the left frame.
+        #--- Create a story tree window in the left frame.
         self.tv = TreeViewer(self.leftFrame, self._mdl, self, self._ctrl, prefs)
         self.views.append(self.tv)
         self.tv.pack(expand=True, fill='both')
@@ -210,37 +193,24 @@ class SlView:
     def disable_menu(self):
         """Disable menu entries when no project is open."""
         self.fileMenu.entryconfig(_('Close'), state='disabled')
-        self.mainMenu.entryconfig(_('Part'), state='disabled')
-        self.mainMenu.entryconfig(_('Chapter'), state='disabled')
-        self.mainMenu.entryconfig(_('Section'), state='disabled')
         self.mainMenu.entryconfig(_('Characters'), state='disabled')
-        self.mainMenu.entryconfig(_('Locations'), state='disabled')
-        self.mainMenu.entryconfig(_('Items'), state='disabled')
-        self.mainMenu.entryconfig(_('Plot'), state='disabled')
-        self.mainMenu.entryconfig(_('Project notes'), state='disabled')
-        self.mainMenu.entryconfig(_('Export'), state='disabled')
-        self.mainMenu.entryconfig(_('Import'), state='disabled')
+        self.mainMenu.entryconfig(_('Books'), state='disabled')
+        self.mainMenu.entryconfig(_('Arc'), state='disabled')
+        self.mainMenu.entryconfig(_('Turning point'), state='disabled')
         self.fileMenu.entryconfig(_('Reload'), state='disabled')
         self.fileMenu.entryconfig(_('Restore backup'), state='disabled')
         self.fileMenu.entryconfig(_('Refresh Tree'), state='disabled')
-        self.fileMenu.entryconfig(_('Lock'), state='disabled')
-        self.fileMenu.entryconfig(_('Unlock'), state='disabled')
         self.fileMenu.entryconfig(_('Open Project folder'), state='disabled')
         self.fileMenu.entryconfig(_('Copy style sheet'), state='disabled')
         self.fileMenu.entryconfig(_('Save'), state='disabled')
         self.fileMenu.entryconfig(_('Save as...'), state='disabled')
-        self.fileMenu.entryconfig(_('Discard manuscript'), state='disabled')
-        self.viewMenu.entryconfig(_('Chapter level'), state='disabled')
         self.viewMenu.entryconfig(_('Expand selected'), state='disabled')
         self.viewMenu.entryconfig(_('Collapse selected'), state='disabled')
         self.viewMenu.entryconfig(_('Expand all'), state='disabled')
         self.viewMenu.entryconfig(_('Collapse all'), state='disabled')
-        self.viewMenu.entryconfig(_('Show Book'), state='disabled')
         self.viewMenu.entryconfig(_('Show Characters'), state='disabled')
-        self.viewMenu.entryconfig(_('Show Locations'), state='disabled')
-        self.viewMenu.entryconfig(_('Show Items'), state='disabled')
+        self.viewMenu.entryconfig(_('Show Books'), state='disabled')
         self.viewMenu.entryconfig(_('Show Arcs'), state='disabled')
-        self.viewMenu.entryconfig(_('Show Project notes'), state='disabled')
         for view in self.views:
             try:
                 view.disable_menu()
@@ -272,36 +242,24 @@ class SlView:
     def enable_menu(self):
         """Enable menu entries when a project is open."""
         self.fileMenu.entryconfig(_('Close'), state='normal')
-        self.mainMenu.entryconfig(_('Part'), state='normal')
-        self.mainMenu.entryconfig(_('Chapter'), state='normal')
-        self.mainMenu.entryconfig(_('Section'), state='normal')
         self.mainMenu.entryconfig(_('Characters'), state='normal')
-        self.mainMenu.entryconfig(_('Locations'), state='normal')
-        self.mainMenu.entryconfig(_('Items'), state='normal')
-        self.mainMenu.entryconfig(_('Plot'), state='normal')
-        self.mainMenu.entryconfig(_('Project notes'), state='normal')
-        self.mainMenu.entryconfig(_('Export'), state='normal')
-        self.mainMenu.entryconfig(_('Import'), state='normal')
+        self.mainMenu.entryconfig(_('Books'), state='normal')
+        self.mainMenu.entryconfig(_('Arc'), state='normal')
+        self.mainMenu.entryconfig(_('Turning point'), state='normal')
         self.fileMenu.entryconfig(_('Reload'), state='normal')
         self.fileMenu.entryconfig(_('Restore backup'), state='normal')
         self.fileMenu.entryconfig(_('Refresh Tree'), state='normal')
-        self.fileMenu.entryconfig(_('Lock'), state='normal')
         self.fileMenu.entryconfig(_('Open Project folder'), state='normal')
         self.fileMenu.entryconfig(_('Copy style sheet'), state='normal')
         self.fileMenu.entryconfig(_('Save'), state='normal')
         self.fileMenu.entryconfig(_('Save as...'), state='normal')
-        self.fileMenu.entryconfig(_('Discard manuscript'), state='normal')
-        self.viewMenu.entryconfig(_('Chapter level'), state='normal')
         self.viewMenu.entryconfig(_('Expand selected'), state='normal')
         self.viewMenu.entryconfig(_('Collapse selected'), state='normal')
         self.viewMenu.entryconfig(_('Expand all'), state='normal')
         self.viewMenu.entryconfig(_('Collapse all'), state='normal')
-        self.viewMenu.entryconfig(_('Show Book'), state='normal')
         self.viewMenu.entryconfig(_('Show Characters'), state='normal')
-        self.viewMenu.entryconfig(_('Show Locations'), state='normal')
-        self.viewMenu.entryconfig(_('Show Items'), state='normal')
+        self.viewMenu.entryconfig(_('Show Books'), state='normal')
         self.viewMenu.entryconfig(_('Show Arcs'), state='normal')
-        self.viewMenu.entryconfig(_('Show Project notes'), state='normal')
         for view in self.views:
             try:
                 view.enable_menu()
@@ -356,18 +314,14 @@ class SlView:
         
         'Document title by author - application'
         """
-        if self._mdl.novel is None:
+        if self._mdl.story is None:
             return
 
-        if self._mdl.novel.title:
-            titleView = self._mdl.novel.title
+        if self._mdl.story.title:
+            titleView = self._mdl.story.title
         else:
             titleView = _('Untitled project')
-        if self._mdl.novel.authorName:
-            authorView = self._mdl.novel.authorName
-        else:
-            authorView = _('Unknown author')
-        self.root.title(f'{titleView} {_("by")} {authorView} - {self.title}')
+        self.root.title(f'{titleView} - {self.title}')
 
     def show_error(self, message, title=None):
         """Display an error message box.
@@ -421,16 +375,6 @@ class SlView:
         """
         self.root.mainloop()
 
-    def toggle_contents_view(self, event=None):
-        """Show/hide the contents viewer text box."""
-        if self.middleFrame.winfo_manager():
-            self.middleFrame.pack_forget()
-            prefs['show_contents'] = False
-        else:
-            self.middleFrame.pack(after=self.leftFrame, side='left', expand=False, fill='both')
-            prefs['show_contents'] = True
-        return 'break'
-
     def toggle_properties_view(self, event=None):
         """Show/hide the element properties frame."""
         if self.rightFrame.winfo_manager():
@@ -449,32 +393,6 @@ class SlView:
         else:
             self.detach_properties_frame()
         return 'break'
-
-    def unlock(self):
-        """Make the "unlocked" state visible."""
-        self.pathBar.config(bg=self.root.cget('background'))
-        self.pathBar.config(fg='black')
-        self.fileMenu.entryconfig(_('Save'), state='normal')
-        self.fileMenu.entryconfig(_('Lock'), state='normal')
-        self.fileMenu.entryconfig(_('Unlock'), state='disabled')
-        for view in self.views:
-            try:
-                view.unlock()
-            except AttributeError:
-                pass
-
-    def lock(self):
-        """Make the "locked" state visible."""
-        self.pathBar.config(bg=prefs['color_locked_bg'])
-        self.pathBar.config(fg=prefs['color_locked_fg'])
-        self.fileMenu.entryconfig(_('Save'), state='disabled')
-        self.fileMenu.entryconfig(_('Lock'), state='disabled')
-        self.fileMenu.entryconfig(_('Unlock'), state='normal')
-        for view in self.views:
-            try:
-                view.lock()
-            except AttributeError:
-                pass
 
     def refresh(self):
         """Update children."""
@@ -495,16 +413,12 @@ class SlView:
         self.root.bind(self._KEY_RESTORE_STATUS[0], self.restore_status)
         self.root.bind(self._KEY_OPEN_PROJECT[0], self._ctrl.open_project)
 
-        self.root.bind(self._KEY_LOCK_PROJECT[0], self._ctrl.lock)
-        self.root.bind(self._KEY_UNLOCK_PROJECT[0], self._ctrl.unlock)
         self.root.bind(self._KEY_RELOAD_PROJECT[0], self._ctrl.reload_project)
         self.root.bind(self._KEY_RESTORE_BACKUP[0], self._ctrl.restore_backup)
         self.root.bind(self._KEY_FOLDER[0], self._ctrl.open_project_folder)
         self.root.bind(self._KEY_REFRESH_TREE[0], self._ctrl.refresh_views)
         self.root.bind(self._KEY_SAVE_PROJECT[0], self._ctrl.save_project)
         self.root.bind(self._KEY_SAVE_AS[0], self._ctrl.save_as)
-        self.root.bind(self._KEY_CHAPTER_LEVEL[0], self.tv.show_chapter_level)
-        self.root.bind(self._KEY_TOGGLE_VIEWER[0], self.toggle_contents_view)
         self.root.bind(self._KEY_TOGGLE_PROPERTIES[0], self.toggle_properties_view)
         self.root.bind(self._KEY_DETACH_PROPERTIES[0], self.toggle_properties_window)
         self.root.bind(self._KEY_ADD_ELEMENT[0], self._ctrl.add_element)
@@ -519,26 +433,18 @@ class SlView:
     def _build_menu(self):
         """Add commands and submenus to the main menu."""
 
-        # "New" submenu
-        self.newMenu = tk.Menu(self.mainMenu, tearoff=0)
-        self.newMenu.add_command(label=_('Empty project'), command=self._ctrl.new_project)
-        self.newMenu.add_command(label=_('Create from ODT...'), command=self._ctrl.import_odf)
-
         # Files
         self.fileMenu = tk.Menu(self.mainMenu, tearoff=0)
         self.mainMenu.add_cascade(label=_('File'), menu=self.fileMenu)
-        self.fileMenu.add_cascade(label=_('New'), menu=self.newMenu)
+        self.fileMenu.add_command(label=_('New'), command=self._ctrl.new_project)
         self.fileMenu.add_command(label=_('Open...'), accelerator=self._KEY_OPEN_PROJECT[1], command=self._ctrl.open_project)
         self.fileMenu.add_command(label=_('Reload'), accelerator=self._KEY_RELOAD_PROJECT[1], command=self._ctrl.reload_project)
         self.fileMenu.add_command(label=_('Restore backup'), accelerator=self._KEY_RESTORE_BACKUP[1], command=self._ctrl.restore_backup)
         self.fileMenu.add_separator()
         self.fileMenu.add_command(label=_('Refresh Tree'), accelerator=self._KEY_REFRESH_TREE[1], command=self._ctrl.refresh_views)
-        self.fileMenu.add_command(label=_('Lock'), accelerator=self._KEY_LOCK_PROJECT[1], command=self._ctrl.lock)
-        self.fileMenu.add_command(label=_('Unlock'), accelerator=self._KEY_UNLOCK_PROJECT[1], command=self._ctrl.unlock)
         self.fileMenu.add_separator()
         self.fileMenu.add_command(label=_('Open Project folder'), accelerator=self._KEY_FOLDER[1], command=self._ctrl.open_project_folder)
         self.fileMenu.add_command(label=_('Copy style sheet'), command=self._ctrl.copy_css)
-        self.fileMenu.add_command(label=_('Discard manuscript'), command=self._ctrl.discard_manuscript)
         self.fileMenu.add_separator()
         self.fileMenu.add_command(label=_('Save'), accelerator=self._KEY_SAVE_PROJECT[1], command=self._ctrl.save_project)
         self.fileMenu.add_command(label=_('Save as...'), accelerator=self._KEY_SAVE_AS[1], command=self._ctrl.save_as)
@@ -551,123 +457,51 @@ class SlView:
         # View
         self.viewMenu = tk.Menu(self.mainMenu, tearoff=0)
         self.mainMenu.add_cascade(label=_('View'), menu=self.viewMenu)
-        self.viewMenu.add_command(label=_('Chapter level'), accelerator=self._KEY_CHAPTER_LEVEL[1], command=self.tv.show_chapter_level)
         self.viewMenu.add_command(label=_('Expand selected'), command=lambda: self.tv.open_children(self.tv.tree.selection()[0]))
         self.viewMenu.add_command(label=_('Collapse selected'), command=lambda: self.tv.close_children(self.tv.tree.selection()[0]))
         self.viewMenu.add_command(label=_('Expand all'), command=lambda: self.tv.open_children(''))
         self.viewMenu.add_command(label=_('Collapse all'), command=lambda: self.tv.close_children(''))
         self.viewMenu.add_separator()
-        self.viewMenu.add_command(label=_('Show Book'), command=lambda: self.tv.show_branch(CH_ROOT))
+        self.viewMenu.add_command(label=_('Show Books'), command=lambda: self.tv.show_branch(BK_ROOT))
         self.viewMenu.add_command(label=_('Show Characters'), command=lambda: self.tv.show_branch(CR_ROOT))
-        self.viewMenu.add_command(label=_('Show Locations'), command=lambda: self.tv.show_branch(LC_ROOT))
-        self.viewMenu.add_command(label=_('Show Items'), command=lambda: self.tv.show_branch(IT_ROOT))
         self.viewMenu.add_command(label=_('Show Arcs'), command=lambda: self.tv.show_branch(AC_ROOT))
-        self.viewMenu.add_command(label=_('Show Project notes'), command=lambda: self.tv.show_branch(PN_ROOT))
         self.viewMenu.add_separator()
-        self.viewMenu.add_command(label=_('Toggle Text viewer'), accelerator=self._KEY_TOGGLE_VIEWER[1], command=self.toggle_contents_view)
         self.viewMenu.add_command(label=_('Toggle Properties'), accelerator=self._KEY_TOGGLE_PROPERTIES[1], command=self.toggle_properties_view)
         self.viewMenu.add_command(label=_('Detach/Dock Properties'), accelerator=self._KEY_DETACH_PROPERTIES[1], command=self.toggle_properties_window)
         self.viewMenu.add_separator()
         self.viewMenu.add_command(label=_('Options'), command=self._view_options)
-
-        # Part
-        self.partMenu = tk.Menu(self.mainMenu, tearoff=0)
-        self.mainMenu.add_cascade(label=_('Part'), menu=self.partMenu)
-        self.partMenu.add_command(label=_('Add'), command=self._ctrl.add_part)
-        self.partMenu.add_separator()
-        self.partMenu.add_command(label=_('Export part descriptions for editing'), command=lambda: self._ctrl.export_document(PARTS_SUFFIX))
-
-        # Chapter
-        self.chapterMenu = tk.Menu(self.mainMenu, tearoff=0)
-        self.mainMenu.add_cascade(label=_('Chapter'), menu=self.chapterMenu)
-        self.chapterMenu.add_command(label=_('Add'), command=self._ctrl.add_chapter)
-        self.chapterMenu.add_separator()
-        self.chapterMenu.add_cascade(label=_('Set Type'), menu=self.tv.selectTypeMenu)
-        self.chapterMenu.add_cascade(label=_('Change Level'), menu=self.tv.selectLevelMenu)
-        self.chapterMenu.add_separator()
-        self.chapterMenu.add_command(label=_('Export chapter descriptions for editing'), command=lambda: self._ctrl.export_document(CHAPTERS_SUFFIX))
-
-        # Section
-        self.sectionMenu = tk.Menu(self.mainMenu, tearoff=0)
-        self.mainMenu.add_cascade(label=_('Section'), menu=self.sectionMenu)
-        self.sectionMenu.add_command(label=_('Add'), command=self._ctrl.add_section)
-        self.sectionMenu.add_separator()
-        self.sectionMenu.add_cascade(label=_('Set Type'), menu=self.tv.selectTypeMenu)
-        self.sectionMenu.add_cascade(label=_('Set Status'), menu=self.tv.scStatusMenu)
-        self.sectionMenu.add_separator()
-        self.sectionMenu.add_command(label=_('Export section descriptions for editing'), command=lambda: self._ctrl.export_document(SECTIONS_SUFFIX))
-        self.sectionMenu.add_command(label=_('Export section list (spreadsheet)'), command=lambda: self._ctrl.export_document(SECTIONLIST_SUFFIX))
 
         # Character
         self.characterMenu = tk.Menu(self.mainMenu, tearoff=0)
         self.mainMenu.add_cascade(label=_('Characters'), menu=self.characterMenu)
         self.characterMenu.add_command(label=_('Add'), command=self._ctrl.add_character)
         self.characterMenu.add_separator()
-        self.characterMenu.add_cascade(label=_('Set Status'), menu=self.tv.crStatusMenu)
-        self.characterMenu.add_separator()
-        self.characterMenu.add_command(label=_('Import'), command=lambda: self._ctrl.import_world_elements(CHARACTER_PREFIX))
-        self.characterMenu.add_separator()
-        self.characterMenu.add_command(label=_('Export character descriptions for editing'), command=lambda: self._ctrl.export_document(CHARACTERS_SUFFIX))
+        self.characterMenu.add_command(label=_('Export character descriptions'), command=lambda: self._ctrl.export_document(CHARACTERS_SUFFIX))
         self.characterMenu.add_command(label=_('Export character list (spreadsheet)'), command=lambda: self._ctrl.export_document(CHARLIST_SUFFIX))
-        self.characterMenu.add_command(label=_('Show list'), command=lambda: self._ctrl.show_report(CHARACTER_REPORT_SUFFIX))
+        self.characterMenu.add_command(label=_('Show list'), command=lambda: self._ctrl.show_report(CHARLIST_SUFFIX))
 
-        # Location
-        self.locationMenu = tk.Menu(self.mainMenu, tearoff=0)
-        self.mainMenu.add_cascade(label=_('Locations'), menu=self.locationMenu)
-        self.locationMenu.add_command(label=_('Add'), command=self._ctrl.add_location)
-        self.locationMenu.add_separator()
-        self.locationMenu.add_command(label=_('Import'), command=lambda: self._ctrl.import_world_elements(LOCATION_PREFIX))
-        self.locationMenu.add_separator()
-        self.locationMenu.add_command(label=_('Export location descriptions for editing'), command=lambda: self._ctrl.export_document(LOCATIONS_SUFFIX))
-        self.locationMenu.add_command(label=_('Export location list (spreadsheet)'), command=lambda: self._ctrl.export_document(LOCLIST_SUFFIX))
-        self.locationMenu.add_command(label=_('Show list'), command=lambda: self._ctrl.show_report(LOCATION_REPORT_SUFFIX))
+        # Book
+        self.bookMenu = tk.Menu(self.mainMenu, tearoff=0)
+        self.mainMenu.add_cascade(label=_('Books'), menu=self.bookMenu)
+        self.bookMenu.add_command(label=_('Add'), command=self._ctrl.add_book)
+        self.bookMenu.add_separator()
+        self.bookMenu.add_command(label=_('Export book descriptions'), command=lambda: self._ctrl.export_document(BOOKS_SUFFIX))
+        self.bookMenu.add_command(label=_('Export book list (spreadsheet)'), command=lambda: self._ctrl.export_document(BOOKLIST_SUFFIX))
+        self.bookMenu.add_command(label=_('Show list'), command=lambda: self._ctrl.show_report(BOOKLIST_SUFFIX))
 
-        # "Item" menu.
-        self.itemMenu = tk.Menu(self.mainMenu, tearoff=0)
-        self.mainMenu.add_cascade(label=_('Items'), menu=self.itemMenu)
-        self.itemMenu.add_command(label=_('Add'), command=self._ctrl.add_item)
-        self.itemMenu.add_separator()
-        self.itemMenu.add_command(label=_('Import'), command=lambda: self._ctrl.import_world_elements(ITEM_PREFIX))
-        self.itemMenu.add_separator()
-        self.itemMenu.add_command(label=_('Export item descriptions for editing'), command=lambda: self._ctrl.export_document(ITEMS_SUFFIX))
-        self.itemMenu.add_command(label=_('Export item list (spreadsheet)'), command=lambda: self._ctrl.export_document(ITEMLIST_SUFFIX))
-        self.itemMenu.add_command(label=_('Show list'), command=lambda: self._ctrl.show_report(ITEM_REPORT_SUFFIX))
-
-        # "Plot" menu.
+        # "Arc" menu.
         self.plotMenu = tk.Menu(self.mainMenu, tearoff=0)
-        self.mainMenu.add_cascade(label=_('Plot'), menu=self.plotMenu)
-        self.plotMenu.add_command(label=_('Add Arc'), command=self._ctrl.add_arc)
-        self.plotMenu.add_command(label=_('Add Turning point'), command=self._ctrl.add_turning_point)
-        self.plotMenu.add_separator()
-        self.plotMenu.add_command(label=_('Insert Stage'), command=self._ctrl.add_stage)
-        self.plotMenu.add_cascade(label=_('Change Level'), menu=self.tv.selectLevelMenu)
+        self.mainMenu.add_cascade(label=_('Arc'), menu=self.plotMenu)
+        self.plotMenu.add_command(label=_('Add'), command=self._ctrl.add_arc)
         self.plotMenu.add_separator()
         self.plotMenu.add_command(label=_('Export plot description'), command=lambda: self._ctrl.export_document(PLOT_SUFFIX, lock=False))
         self.plotMenu.add_command(label=_('Export plot list (spreadsheet)'), command=lambda: self._ctrl.export_document(PLOTLIST_SUFFIX, lock=False))
         self.plotMenu.add_command(label=_('Show Plot list'), command=lambda: self._ctrl.show_report(PLOTLIST_SUFFIX))
 
-        # Project notes
-        self.prjNoteMenu = tk.Menu(self.mainMenu, tearoff=0)
-        self.mainMenu.add_cascade(label=_('Project notes'), menu=self.prjNoteMenu)
-        self.prjNoteMenu.add_command(label=_('Add'), command=self._ctrl.add_project_note)
-        self.prjNoteMenu.add_separator()
-        self.prjNoteMenu.add_command(label=_('Show list'), command=lambda: self._ctrl.show_report('_projectnote_report'))
-
-        # "Export" menu.
-        self.exportMenu = tk.Menu(self.mainMenu, tearoff=0)
-        self.mainMenu.add_cascade(label=_('Export'), menu=self.exportMenu)
-        self.exportMenu.add_command(label=_('Manuscript for editing'), command=lambda:self._ctrl.export_document(MANUSCRIPT_SUFFIX))
-        self.exportMenu.add_separator()
-        self.exportMenu.add_command(label=_('Manuscript with visible structure tags for proof reading'), command=lambda: self._ctrl.export_document(PROOF_SUFFIX))
-        self.exportMenu.add_separator()
-        self.exportMenu.add_command(label=_('Manuscript without tags (export only)'), command=lambda: self._ctrl.export_document('', lock=False))
-        self.exportMenu.add_command(label=_('Brief synopsis (export only)'), command=lambda: self._ctrl.export_document(BRF_SYNOPSIS_SUFFIX, lock=False))
-        self.exportMenu.add_command(label=_('Cross references (export only)'), command=lambda: self._ctrl.export_document(XREF_SUFFIX, lock=False))
-        self.exportMenu.add_separator()
-        self.exportMenu.add_command(label=_('Characters/locations/items data files'), command=lambda: self._ctrl.export_document(DATA_SUFFIX, lock=False, show=False))
-
-        # "Update" menu.
-        self.mainMenu.add_command(label=_('Import'), command=self._ctrl.update_project)
+        # "Turning point" menu.
+        self.pointMenu = tk.Menu(self.mainMenu, tearoff=0)
+        self.mainMenu.add_cascade(label=_('Turning point'), menu=self.pointMenu)
+        self.pointMenu.add_command(label=_('Add'), command=self._ctrl.add_turning_point)
 
         # "Tools" menu.
         self.toolsMenu = tk.Menu(self.mainMenu, tearoff=0)

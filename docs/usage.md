@@ -24,19 +24,19 @@ After installation, the setup script displays a button to open the installation 
 
 There you will find some registry scripts that can help you integrate *storyliner* into Windows. They are started by double-clicking.
 
-- **add_storyliner.reg** makes Explorer launch *storyliner* when you double-click *.novx* files. *.novx* files will be assigned the *storyliner* icon. *.novx* files will be assigned the content type "text/xml" This may be necessary if you want to view *.novx* files with a web browser. 
+- **add_storyliner.reg** makes Explorer launch *storyliner* when you double-click *.stlx* files. *.stlx* files will be assigned the *storyliner* icon. *.stlx* files will be assigned the content type "text/xml" This may be necessary if you want to view *.stlx* files with a web browser. 
 
 You can redo this:
 
-- **remove_storyliner.reg** removes the registry entries made for the *.novx* file type. 
+- **remove_storyliner.reg** removes the registry entries made for the *.stlx* file type. 
 
 --- 
 
 ### Linux desktop integration
 
 - You can configure a desktop launcher for *storyliner* and assign the *storyliner* icon you may find in the installation's **icons** subdirectory.
-- You can set *storyliner* as the default application for *.novx* files.
-- If you want to view *.novx* files with your web browser, it is recommended to register the *MIME type* of *.novx* files as *"text/xml"*.
+- You can set *storyliner* as the default application for *.stlx* files.
+- If you want to view *.stlx* files with your web browser, it is recommended to register the *MIME type* of *.stlx* files as *"text/xml"*.
 
 Please refer to your desktop's documentation. 
 
@@ -49,7 +49,7 @@ The included installation script prompts you to create a shortcut on the desktop
 You can either
 
 - launch the program by double-clicking on the shortcut icon, or
-- launch the program by dragging a *.novx* project file and dropping it on the shortcut icon.
+- launch the program by dragging a *.stlx* project file and dropping it on the shortcut icon.
 
 
 --- 

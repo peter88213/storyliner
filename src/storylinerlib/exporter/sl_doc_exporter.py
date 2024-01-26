@@ -11,49 +11,14 @@ from tkinter import messagebox
 from novxlib.converter.export_target_factory import ExportTargetFactory
 from novxlib.file.doc_open import open_document
 from novxlib.novx.data_writer import DataWriter
-from novxlib.novx_globals import Error
-from novxlib.novx_globals import _
-from novxlib.novx_globals import norm_path
-from novxlib.ods.ods_w_charlist import OdsWCharList
-from novxlib.ods.ods_w_itemlist import OdsWItemList
-from novxlib.ods.ods_w_loclist import OdsWLocList
-from novxlib.ods.ods_w_plot_list import OdsWPlotList
-from novxlib.ods.ods_w_sectionlist import OdsWSectionList
-from novxlib.odt.odt_w_brief_synopsis import OdtWBriefSynopsis
-from novxlib.odt.odt_w_chapterdesc import OdtWChapterDesc
-from novxlib.odt.odt_w_characters import OdtWCharacters
-from novxlib.odt.odt_w_export import OdtWExport
-from novxlib.odt.odt_w_items import OdtWItems
-from novxlib.odt.odt_w_locations import OdtWLocations
-from novxlib.odt.odt_w_manuscript import OdtWManuscript
-from novxlib.odt.odt_w_partdesc import OdtWPartDesc
-from novxlib.odt.odt_w_plot import OdtWPlot
-from novxlib.odt.odt_w_proof import OdtWProof
-from novxlib.odt.odt_w_sectiondesc import OdtWSectionDesc
-from novxlib.odt.odt_w_xref import OdtWXref
+from storylinerlib.storyliner_globals import Error
+from storylinerlib.storyliner_globals import _
+from storylinerlib.storyliner_globals import norm_path
 
 
 class SlDocExporter:
     """Converter class for document export."""
     EXPORT_TARGET_CLASSES = [
-        OdtWProof,
-        OdtWManuscript,
-        OdtWBriefSynopsis,
-        OdtWSectionDesc,
-        OdtWChapterDesc,
-        OdtWPartDesc,
-        OdtWExport,
-        OdtWPlot,
-        OdtWCharacters,
-        OdtWItems,
-        OdtWLocations,
-        OdtWXref,
-        OdsWCharList,
-        OdsWLocList,
-        OdsWItemList,
-        OdsWSectionList,
-        OdsWPlotList,
-        DataWriter,
         ]
 
     def __init__(self):
@@ -104,11 +69,11 @@ class SlDocExporter:
                 return f'{prefix}{_("Opened existing {0} (last saved on {1})").format(self._target.DESCRIPTION, self._targetFileDate)}.'
 
         # Generate a new document. Overwrite the existing document, if any.
-        self._target.novel = self._source.novel
+        self._target.story = self._source.story
         self._target.write()
         self._targetFileDate = datetime.now().replace(microsecond=0).isoformat(sep=' ')
         if kwargs.get('show', True):
-            if messagebox.askyesno(title=self._target.novel.title, message=_('{} created.\n\nOpen now?').format(norm_path(self._target.DESCRIPTION))):
+            if messagebox.askyesno(title=self._target.story.title, message=_('{} created.\n\nOpen now?').format(norm_path(self._target.DESCRIPTION))):
                 open_document(self._target.filePath)
         return _('Created {0} on {1}.').format(self._target.DESCRIPTION, self._targetFileDate)
 

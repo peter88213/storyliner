@@ -3,13 +3,13 @@
 	<property name="version" value="0.1.0" />
 	<property name="test-app" value="storyliner" />
 	
-	<property name="source-path" location="../src" />
-	<property name="test-path" location="../test" />
-	<property name="build-path" location="../build" />
-	<property name="dist-path" location="../dist" />
-	<property name="docs-path" location="../docs" />
-	<property name="i18n-path" location="../i18n" />
-	<property name="novxlib-path" location="../../novxlib" />
+	<property name="source-path" value="../src" />
+	<property name="test-path" value="../test" />
+	<property name="build-path" value="../build" />
+	<property name="dist-path" value="../dist" />
+	<property name="docs-path" value="../docs" />
+	<property name="i18n-path" value="../i18n" />
+	<property name="novxlib-path" value="../../novxlib" />
 	<property name="application" value="${ant.project.name}" />
 	<property name="release" value="${application}_v${version}" />
 

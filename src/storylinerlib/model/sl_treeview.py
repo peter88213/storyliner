@@ -6,12 +6,9 @@ License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from tkinter import ttk
 
-from novxlib.novx_globals import AC_ROOT
-from novxlib.novx_globals import CH_ROOT
-from novxlib.novx_globals import CR_ROOT
-from novxlib.novx_globals import IT_ROOT
-from novxlib.novx_globals import LC_ROOT
-from novxlib.novx_globals import PN_ROOT
+from storylinerlib.storyliner_globals import AC_ROOT
+from storylinerlib.storyliner_globals import CR_ROOT
+from storylinerlib.storyliner_globals import BK_ROOT
 
 
 class SlTreeview(ttk.Treeview):
@@ -22,12 +19,9 @@ class SlTreeview(ttk.Treeview):
         self.on_element_change = self.do_nothing
 
         #--- Build the toplevel  structure.
-        self.append('', CH_ROOT)
-        self.append('', CR_ROOT)
-        self.append('', LC_ROOT)
-        self.append('', IT_ROOT)
         self.append('', AC_ROOT)
-        self.append('', PN_ROOT)
+        self.append('', BK_ROOT)
+        self.append('', CR_ROOT)
 
     def append(self, parent, iid, text=None):
         if text is None:

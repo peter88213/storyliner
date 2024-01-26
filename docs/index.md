@@ -11,13 +11,13 @@ The main differences are an improved workflow that doesn't require a LibreOffice
 
 If you are considering switching from *novelyst* to *storyliner*, the 
 [storyliner_yw7 plugin](https://peter88213.github.io/storyliner_yw7/) will help you to
-create *.novx* files from your existing projects. To migrate entire collections or larger amounts of project files,
+create *.stlx* files from your existing projects. To migrate entire collections or larger amounts of project files,
 you might want to take a look at the [yw_novx conversion tools](https://github.com/peter88213/yw_novx).
 
 
 ## Features
 
-- The entire project is displayed in a tree, with branches for the book, characters, locations, items, arcs, and project notes.
+- The entire project is displayed in a tree, with branches for the book, characters, books, items, arcs, and project notes.
 - Tree elements can be added, moved, and deleted.
 - There are three levels: part, chapter, and section.
 - The right sidebar displays the essential properties of the selected element for editing.

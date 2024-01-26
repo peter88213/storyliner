@@ -1,10 +1,10 @@
-# A stylesheet for viewing the noveltree project with a web browser
+# A stylesheet for viewing the storyliner project with a web browser
 
 1. Copy *novx.css* into your project directory.
-2. Open your *<project name>.novx* file with your web browser.
+2. Open your *<project name>.stlx* file with your web browser.
 
 **Note:** Depending on your web browser and your operating system, 
-the *content type* resp. *MIME type* of *.novx* files must be
+the *content type* resp. *MIME type* of *.stlx* files must be
 registered as *"text/xml"*. Under Windows, yo can do this by
-running the **<home>\.noveltree\add_noveltree.reg** script.
+running the **<home>\.storyliner\add_storyliner.reg** script.
 

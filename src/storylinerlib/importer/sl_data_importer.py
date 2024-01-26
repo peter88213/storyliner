@@ -1,4 +1,4 @@
-"""Provide a class for a characters/locations/items importer.
+"""Provide a class for a characters/books/items importer.
 
 Copyright (c) 2024 Peter Triesberger
 For further information see https://github.com/peter88213/storyliner
@@ -10,19 +10,19 @@ from novxlib.model.novel import Novel
 from novxlib.model.nv_tree import NvTree
 from novxlib.novx.character_data_reader import CharacterDataReader
 from novxlib.novx.item_data_reader import ItemDataReader
-from novxlib.novx.location_data_reader import LocationDataReader
-from novxlib.novx_globals import CHARACTER_PREFIX
-from novxlib.novx_globals import CR_ROOT
-from novxlib.novx_globals import ITEM_PREFIX
-from novxlib.novx_globals import IT_ROOT
-from novxlib.novx_globals import LC_ROOT
-from novxlib.novx_globals import LOCATION_PREFIX
-from novxlib.novx_globals import _
-from novxlib.novx_globals import norm_path
+from novxlib.novx.book_data_reader import BookDataReader
+from storylinerlib.storyliner_globals import CHARACTER_PREFIX
+from storylinerlib.storyliner_globals import CR_ROOT
+from storylinerlib.storyliner_globals import ITEM_PREFIX
+from storylinerlib.storyliner_globals import IT_ROOT
+from storylinerlib.storyliner_globals import BK_ROOT
+from storylinerlib.storyliner_globals import BOOK_PREFIX
+from storylinerlib.storyliner_globals import _
+from storylinerlib.storyliner_globals import norm_path
 
 
 class SlDataImporter:
-    """Characters/locations/items importer with a pick list."""
+    """Characters/books/items importer with a pick list."""
 
     def __init__(self, model, view, controller, filePath, elemPrefix):
         """Open a pick list with the elements of the XML data file specified by filePath.
@@ -37,14 +37,14 @@ class SlDataImporter:
         self._ctrl = controller
         sources = {
             CHARACTER_PREFIX:CharacterDataReader,
-            LOCATION_PREFIX:LocationDataReader,
+            BOOK_PREFIX:BookDataReader,
             ITEM_PREFIX:ItemDataReader,
             }
         source = sources[elemPrefix](filePath)
-        source.novel = Novel(tree=NvTree())
+        source.story = Novel(tree=NvTree())
         errorMessages = {
             CHARACTER_PREFIX:_('No character data found'),
-            LOCATION_PREFIX:_('No location data found'),
+            BOOK_PREFIX:_('No book data found'),
             ITEM_PREFIX:_('No item data found'),
             }
         try:
@@ -54,23 +54,23 @@ class SlDataImporter:
             return
 
         sourceElements = {
-            CHARACTER_PREFIX:source.novel.characters,
-            LOCATION_PREFIX:source.novel.locations,
-            ITEM_PREFIX:source.novel.items,
+            CHARACTER_PREFIX:source.story.characters,
+            BOOK_PREFIX:source.story.books,
+            ITEM_PREFIX:source.story.items,
             }
         targetElements = {
-            CHARACTER_PREFIX:self._mdl.novel.characters,
-            LOCATION_PREFIX:self._mdl.novel.locations,
-            ITEM_PREFIX:self._mdl.novel.items,
+            CHARACTER_PREFIX:self._mdl.story.characters,
+            BOOK_PREFIX:self._mdl.story.books,
+            ITEM_PREFIX:self._mdl.story.items,
             }
         elemParents = {
             CHARACTER_PREFIX:CR_ROOT,
-            LOCATION_PREFIX:LC_ROOT,
+            BOOK_PREFIX:BK_ROOT,
             ITEM_PREFIX:IT_ROOT,
             }
         windowTitles = {
             CHARACTER_PREFIX:_('Select characters'),
-            LOCATION_PREFIX:_('Select locations'),
+            BOOK_PREFIX:_('Select books'),
             ITEM_PREFIX:_('Select items'),
             }
         self._elemPrefix = elemPrefix
@@ -91,12 +91,12 @@ class SlDataImporter:
             )
 
     def _pick_element(self, elements):
-        """Add the selected elements to the novel."""
+        """Add the selected elements to the story."""
         i = 0
         for  elemId in elements:
             newId = create_id(self._targetElements, prefix=self._elemPrefix)
             self._targetElements[newId] = self._sourceElements[elemId]
-            self._mdl.novel.tree.append(self._elemParent, newId)
+            self._mdl.story.tree.append(self._elemParent, newId)
             i += 1
         if i > 0:
             self._ui.tv.go_to_node(newId)

@@ -8,7 +8,7 @@ from storylinerlib.view.properties_window.basic_view import BasicView
 
 
 class NoView(BasicView):
-    """Class for viewing and editing location properties."""
+    """Class for viewing and editing book properties."""
 
     def focus_title(self):
         """Do not try to give the focus to a non-existent entry.

@@ -1,40 +1,38 @@
-<!ELEMENT stlx (BOOKS, CHARACTERS)>
+<!ELEMENT stlx (PROJECT, ARCS, BOOKS, CHARACTERS)>
     <!ATTLIST stlx 
         version NMTOKEN #FIXED "1.0"
         >
-    <!ELEMENT BOOKS (BOOK*)>
-        <!ELEMENT BOOK (Title?, Desc?, Path, ARC*)>
-	        <!ATTLIST BOOK 
-	            id ID #REQUIRED 
-	            >
+	<!ELEMENT PROJECT (Title?, Desc?)>
 	        <!ELEMENT Title (#PCDATA)>
 	        <!ELEMENT Desc (p*)>
-	        <!ELEMENT p (#PCDATA)>     
-	        <!ELEMENT Path (#PCDATA)>
-	        <!ELEMENT ARC (Title?, ShortName?, Desc?, POINT*)>            
-	            <!ATTLIST ARC 
-	                id ID #REQUIRED
-	                >
-	            <!ELEMENT ShortName (#PCDATA)>
-	            <!ELEMENT POINT (Title?, Desc?)>
-	                <!ATTLIST POINT 
-	                    id ID #REQUIRED
+	        <!ELEMENT p (#PCDATA)>
+	<!ELEMENT ARCS (ARC*)>     
+        <!ELEMENT ARC (Title?, ShortName?, Desc?, Notes?, POINT*)>            
+            <!ATTLIST ARC 
+                id ID #REQUIRED
+                >
+            <!ELEMENT ShortName (#PCDATA)>
+            <!ELEMENT POINT (Title?, Desc?, Notes?, Books?)>
+                <!ATTLIST POINT 
+                    id ID #REQUIRED
+                    position NMTOKEN #REQUIRED
+                    >
+                <!ELEMENT Books EMPTY>
+	                <!ATTLIST Books 
+	                    ids IDREFS #REQUIRED
 	                    >
+    <!ELEMENT BOOKS (BOOK*)>
+        <!ELEMENT BOOK (Title?, Desc?, Notes?)>
+	        <!ATTLIST BOOK 
+	            id ID #REQUIRED
+	            path NMTOKEN #IMPLIED
+	            >
 	<!ELEMENT CHARACTERS (CHARACTER*)>
-		<!ELEMENT CHARACTER (Title?, FullName?, Aka?, Desc?, 
-			Bio?, Goals?, Notes?, Tags?, BirthDate?, DeathDate?, Link*)>
+		<!ELEMENT CHARACTER (Title?, FullName?, Desc?, 
+			Role?, Notes?)>
 			<!ATTLIST CHARACTER 
 				id ID #REQUIRED
 				>
 	        <!ELEMENT FullName (#PCDATA)>
-	        <!ELEMENT Aka (#PCDATA)>
-	        <!ELEMENT Bio (p*)>
-	        <!ELEMENT Goals (p*)>
+	        <!ELEMENT Role (p*)>
 	        <!ELEMENT Notes (p*)>
-	        <!ELEMENT Tags (#PCDATA)>
-	        <!ELEMENT BirthDate (#PCDATA)>
-	        <!ELEMENT DeathDate (#PCDATA)>
-	        <!ELEMENT Link (Title?)>
-				<!ATTLIST Link
-					path NMTOKEN #REQUIRED
-					>
