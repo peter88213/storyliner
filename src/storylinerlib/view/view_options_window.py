@@ -77,11 +77,6 @@ class ViewOptionsWindow(tk.Toplevel):
             command=self.destroy
             ).pack(padx=5, pady=5, anchor='e')
 
-    def _change_colors(self, *args, **kwargs):
-        cmStr = self._coloringModeStr.get()
-        self._ui.tv.coloringMode = self._ui.tv.COLORING_MODES.index(cmStr)
-        self._ui.tv.refresh()
-
     def _change_column_order(self, *args, **kwargs):
         srtColumns = []
         titles = self._colEntries.get()

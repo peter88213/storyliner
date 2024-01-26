@@ -9,7 +9,6 @@ from tkinter import ttk
 from storylinerlib.model.sl_treeview import SlTreeview
 from storylinerlib.storyliner_globals import prefs
 from storylinerlib.view.tree_window.history_list import HistoryList
-from novxlib.model.section import Section
 from storylinerlib.storyliner_globals import AC_ROOT
 from storylinerlib.storyliner_globals import ARC_POINT_PREFIX
 from storylinerlib.storyliner_globals import ARC_PREFIX
@@ -380,6 +379,13 @@ class TreeViewer(ttk.Frame):
         columns = []
         for __ in self.columns:
             columns.append('')
+        tpBookTitles = []
+        try:
+            for bkId in self._mdl.story.turningPoints[tpId].books:
+                tpBookTitles.append(self._mdl.story.books[bkId].title)
+        except:
+            pass
+        columns[self._colPos['bk']] = list_to_string(tpBookTitles)
 
         return title, columns, ('turning_point')
 

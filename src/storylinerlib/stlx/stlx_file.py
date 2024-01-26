@@ -151,7 +151,7 @@ class StlxFile(File):
         if prjCrt.desc:
             xmlCrt.append(text_to_xml_element('Desc', prjCrt.desc))
         if prjCrt.role:
-            xmlCrt.append(text_to_xml_element('Role', prjCrt.bio))
+            xmlCrt.append(text_to_xml_element('Role', prjCrt.role))
         if prjCrt.notes:
             xmlCrt.append(text_to_xml_element('Notes', prjCrt.notes))
 

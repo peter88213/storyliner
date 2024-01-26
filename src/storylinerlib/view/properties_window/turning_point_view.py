@@ -146,7 +146,7 @@ class TurningPointView(BasicView):
             return
 
         bkId = self._element.books[selection]
-        title = self._mdl.novel.books[bkId].title
+        title = self._mdl.story.books[bkId].title
         if self._ui.ask_yes_no(f'{_("Remove book")}: "{title}"?'):
             bkList = self._element.books
             del bkList[selection]
