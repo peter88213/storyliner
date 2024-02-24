@@ -168,6 +168,7 @@ class SlModel:
             title=kwargs.get('title', f'{_("New Turning point")} ({tpId})'),
             desc='',
             notes='',
+            books=[],
             position=kwargs.get('position', None),
             on_element_change=self.on_element_change,
             )
