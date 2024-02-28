@@ -121,11 +121,11 @@ class StlxFile(File):
         #--- Turning points.
         for tpId in self.story.tree.get_children(acId):
             xmlPoint = ET.SubElement(xmlArc, 'POINT', attrib={'id':tpId})
-            self._build_turningPoint_branch(xmlPoint, self.story.turningPoints[tpId])
+            self._build_plotpoint_branch(xmlPoint, self.story.turningPoints[tpId])
 
         return xmlArc
 
-    def _build_turningPoint_branch(self, xmlPoint, prjTurningPoint):
+    def _build_plotpoint_branch(self, xmlPoint, prjTurningPoint):
         if prjTurningPoint.title:
             ET.SubElement(xmlPoint, 'Title').text = prjTurningPoint.title
         if prjTurningPoint.desc:
