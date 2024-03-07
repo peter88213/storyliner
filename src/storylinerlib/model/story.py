@@ -16,9 +16,9 @@ class Story(BasicElement):
         """Extends the superclass constructor."""
         super().__init__(**kwargs)
 
-        self.arcs = {}
+        self.plotLines = {}
         # key = arc ID, value = Arc instance.
-        self.turningPoints = {}
+        self.plotPoints = {}
         # key = point ID, value = TurningPoint instance.
         self.books = {}
         # key = book ID, value = WorldElement instance.

@@ -7,7 +7,7 @@ License: GNU LGPLv3 (https://www.gnu.org/licenses/lgpl-3.0.en.html)
 from novxlib.model.basic_element import BasicElement
 
 
-class TurningPoint(BasicElement):
+class PlotPoint(BasicElement):
     """Turning point representation."""
 
     def __init__(self,

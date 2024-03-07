@@ -9,10 +9,10 @@ import os
 from novxlib.file.file import File
 from novxlib.xml.etree_tools import *
 from novxlib.xml.xml_indent import indent
-from storylinerlib.model.arc import Arc
+from storylinerlib.model.arc import PlotLine
 from storylinerlib.model.book import Book
 from storylinerlib.model.character import Character
-from storylinerlib.model.turning_point import TurningPoint
+from storylinerlib.model.turning_point import PlotPoint
 from storylinerlib.storyliner_globals import AC_ROOT
 from storylinerlib.storyliner_globals import BK_ROOT
 from storylinerlib.storyliner_globals import CR_ROOT
@@ -91,7 +91,7 @@ class StlxFile(File):
             pass
         self.story.tree.reset()
         self._read_books(xmlRoot)
-        self._read_arcs(xmlRoot)
+        self._read_plot_lines(xmlRoot)
         self._read_characters(xmlRoot)
 
     def write(self):
@@ -109,39 +109,39 @@ class StlxFile(File):
         self._write_element_tree(self)
         self._postprocess_xml_file(self.filePath)
 
-    def _build_arc_branch(self, xmlArcs, prjArc, acId):
-        xmlArc = ET.SubElement(xmlArcs, 'ARC', attrib={'id':acId})
-        if prjArc.title:
-            ET.SubElement(xmlArc, 'Title').text = prjArc.title
-        if prjArc.shortName:
-            ET.SubElement(xmlArc, 'ShortName').text = prjArc.shortName
-        if prjArc.desc:
-            xmlArc.append(text_to_xml_element('Desc', prjArc.desc))
+    def _build_plot_line_branch(self, xmlPlotLines, prjPlotLine, acId):
+        xmlArc = ET.SubElement(xmlPlotLines, 'ARC', attrib={'id':acId})
+        if prjPlotLine.title:
+            ET.SubElement(xmlArc, 'Title').text = prjPlotLine.title
+        if prjPlotLine.shortName:
+            ET.SubElement(xmlArc, 'ShortName').text = prjPlotLine.shortName
+        if prjPlotLine.desc:
+            xmlArc.append(text_to_xml_element('Desc', prjPlotLine.desc))
 
         #--- Turning points.
         for tpId in self.story.tree.get_children(acId):
             xmlPoint = ET.SubElement(xmlArc, 'POINT', attrib={'id':tpId})
-            self._build_plotpoint_branch(xmlPoint, self.story.turningPoints[tpId])
+            self._build_plot_point_branch(xmlPoint, self.story.plotPoints[tpId])
 
         return xmlArc
 
-    def _build_plotpoint_branch(self, xmlPoint, prjTurningPoint):
-        if prjTurningPoint.title:
-            ET.SubElement(xmlPoint, 'Title').text = prjTurningPoint.title
-        if prjTurningPoint.desc:
-            xmlPoint.append(text_to_xml_element('Desc', prjTurningPoint.desc))
-        if prjTurningPoint.notes:
-            xmlPoint.append(text_to_xml_element('Notes', prjTurningPoint.notes))
+    def _build_plot_point_branch(self, xmlPlotPoint, prjPlotPoint):
+        if prjPlotPoint.title:
+            ET.SubElement(xmlPlotPoint, 'Title').text = prjPlotPoint.title
+        if prjPlotPoint.desc:
+            xmlPlotPoint.append(text_to_xml_element('Desc', prjPlotPoint.desc))
+        if prjPlotPoint.notes:
+            xmlPlotPoint.append(text_to_xml_element('Notes', prjPlotPoint.notes))
         try:
-            position = str(prjTurningPoint.position)
+            position = str(prjPlotPoint.position)
         except:
             position = '0'
-        xmlPoint.set('position', position)
+        xmlPlotPoint.set('position', position)
 
         #--- References.
-        if prjTurningPoint.books:
-            bookIds = list_to_string(prjTurningPoint.books, divider=' ')
-            ET.SubElement(xmlPoint, 'Books', attrib={'ids': bookIds})
+        if prjPlotPoint.books:
+            bookIds = list_to_string(prjPlotPoint.books, divider=' ')
+            ET.SubElement(xmlPlotPoint, 'Books', attrib={'ids': bookIds})
 
     def _build_character_branch(self, xmlCrt, prjCrt):
         if prjCrt.title:
@@ -161,10 +161,10 @@ class StlxFile(File):
         xmlProject = ET.SubElement(root, 'PROJECT')
         self._build_project_branch(xmlProject)
 
-        #--- Process arcs and turning points.
+        #--- Process plotLines and turning points.
         xmlArcs = ET.SubElement(root, 'ARCS')
         for acId in self.story.tree.get_children(AC_ROOT):
-            self._build_arc_branch(xmlArcs, self.story.arcs[acId], acId)
+            self._build_plot_line_branch(xmlArcs, self.story.plotLines[acId], acId)
 
         #--- Process characters.
         xmlCharacters = ET.SubElement(root, 'CHARACTERS')
@@ -222,27 +222,27 @@ class StlxFile(File):
             self.story.books[bkId].nvPath = xmlBook.attrib.get('path', None)
             self.story.tree.append(BK_ROOT, bkId)
 
-    def _read_arcs(self, root):
+    def _read_plot_lines(self, root):
         """Read arc data from the xml element tree."""
         for xmlArc in root.find('ARCS'):
             acId = xmlArc.attrib['id']
-            self.story.arcs[acId] = Arc(on_element_change=self.on_element_change)
-            self.story.arcs[acId].title = get_element_text(xmlArc, 'Title')
-            self.story.arcs[acId].desc = xml_element_to_text(xmlArc.find('Desc'))
-            self.story.arcs[acId].notes = xml_element_to_text(xmlArc.find('Notes'))
-            self.story.arcs[acId].shortName = get_element_text(xmlArc, 'ShortName')
+            self.story.plotLines[acId] = PlotLine(on_element_change=self.on_element_change)
+            self.story.plotLines[acId].title = get_element_text(xmlArc, 'Title')
+            self.story.plotLines[acId].desc = xml_element_to_text(xmlArc.find('Desc'))
+            self.story.plotLines[acId].notes = xml_element_to_text(xmlArc.find('Notes'))
+            self.story.plotLines[acId].shortName = get_element_text(xmlArc, 'ShortName')
             self.story.tree.append(AC_ROOT, acId)
             for xmlPoint in xmlArc.iterfind('POINT'):
                 tpId = xmlPoint.attrib['id']
-                self.story.turningPoints[tpId] = TurningPoint(on_element_change=self.on_element_change)
-                self.story.turningPoints[tpId].title = get_element_text(xmlPoint, 'Title')
-                self.story.turningPoints[tpId].desc = xml_element_to_text(xmlPoint.find('Desc'))
-                self.story.turningPoints[tpId].notes = xml_element_to_text(xmlPoint.find('Notes'))
+                self.story.plotPoints[tpId] = PlotPoint(on_element_change=self.on_element_change)
+                self.story.plotPoints[tpId].title = get_element_text(xmlPoint, 'Title')
+                self.story.plotPoints[tpId].desc = xml_element_to_text(xmlPoint.find('Desc'))
+                self.story.plotPoints[tpId].notes = xml_element_to_text(xmlPoint.find('Notes'))
                 try:
                     position = int(xmlPoint.attrib['position'])
                 except:
                     position = 0
-                self.story.turningPoints[tpId].position = position
+                self.story.plotPoints[tpId].position = position
                 tpBooks = []
                 xmlBooks = xmlPoint.find('Books')
                 if xmlBooks is not None:
@@ -250,7 +250,7 @@ class StlxFile(File):
                     for bkId in string_to_list(bkIds, divider=' '):
                         if bkId and bkId in self.story.books:
                             tpBooks.append(bkId)
-                self.story.turningPoints[tpId].books = tpBooks
+                self.story.plotPoints[tpId].books = tpBooks
 
                 self.story.tree.append(acId, tpId)
 

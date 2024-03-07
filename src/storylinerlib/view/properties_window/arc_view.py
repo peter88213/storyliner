@@ -62,7 +62,7 @@ class ArcView(BasicView):
         
         Extends the superclass constructor.
         """
-        self._element = self._mdl.story.arcs[elementId]
+        self._element = self._mdl.story.plotLines[elementId]
         super().set_data(elementId)
 
         # 'Arc name' entry.

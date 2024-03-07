@@ -38,7 +38,7 @@ class TreeViewer(ttk.Frame):
     _ROOT_TITLES = {
         CR_ROOT: _('Characters'),
         BK_ROOT: _('Books'),
-        AC_ROOT: _('Arcs'),
+        AC_ROOT: _('Plot lines'),
         }
 
     def __init__(self, parent, model, view, controller, kwargs, **kw):
@@ -339,10 +339,10 @@ class TreeViewer(ttk.Frame):
 
     def _configure_arc_display(self, acId):
         """Configure project note formatting and columns."""
-        title = self._mdl.story.arcs[acId].title
+        title = self._mdl.story.plotLines[acId].title
         if not title:
             title = _('Unnamed')
-        title = f'({self._mdl.story.arcs[acId].shortName}) {title}'
+        title = f'({self._mdl.story.plotLines[acId].shortName}) {title}'
         columns = []
         for __ in self.columns:
             columns.append('')
@@ -373,7 +373,7 @@ class TreeViewer(ttk.Frame):
 
     def _configure_turning_point_display(self, tpId):
         """Configure turning point formatting and columns."""
-        title = self._mdl.story.turningPoints[tpId].title
+        title = self._mdl.story.plotPoints[tpId].title
         if not title:
             title = _('Unnamed')
         columns = []
@@ -381,7 +381,7 @@ class TreeViewer(ttk.Frame):
             columns.append('')
         tpBookTitles = []
         try:
-            for bkId in self._mdl.story.turningPoints[tpId].books:
+            for bkId in self._mdl.story.plotPoints[tpId].books:
                 tpBookTitles.append(self._mdl.story.books[bkId].title)
         except:
             pass

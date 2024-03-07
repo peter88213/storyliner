@@ -75,7 +75,7 @@ class Toolbar:
         # "View Arcs" button.
         self._viewArcsButton = ttk.Button(
             self._buttonBar,
-            text=_('Arcs'),
+            text=_('Plot lines'),
             image=self._ui.icons.viewArcsIcon,
             command=lambda: self._ui.tv.show_branch(AC_ROOT)
             )

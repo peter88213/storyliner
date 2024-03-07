@@ -70,7 +70,7 @@ class TurningPointView(BasicView):
         
         Extends the superclass constructor.
         """
-        self._element = self._mdl.story.turningPoints[elementId]
+        self._element = self._mdl.story.plotPoints[elementId]
         super().set_data(elementId)
 
         # 'Books' window.

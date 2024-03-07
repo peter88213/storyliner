@@ -7,8 +7,8 @@ License: GNU LGPLv3 (https://www.gnu.org/licenses/lgpl-3.0.en.html)
 from novxlib.model.basic_element import BasicElement
 
 
-class Arc(BasicElement):
-    """Arc representation."""
+class PlotLine(BasicElement):
+    """PlotLine representation."""
 
     def __init__(self,
             shortName=None,

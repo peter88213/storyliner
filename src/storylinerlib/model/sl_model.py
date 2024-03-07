@@ -5,13 +5,13 @@ For further information see https://github.com/peter88213/storyliner
 License: GNU GPLv3 (https://www.gnu.org/licenses/gpl-3.0.en.html)
 """
 from storylinerlib.model.sl_work_file import SlWorkFile
-from storylinerlib.model.arc import Arc
+from storylinerlib.model.arc import PlotLine
 from storylinerlib.model.basic_element import BasicElement
 from storylinerlib.model.character import Character
 from novxlib.model.id_generator import create_id
 from storylinerlib.model.story import Story
 from storylinerlib.model.book import Book
-from storylinerlib.model.turning_point import TurningPoint
+from storylinerlib.model.turning_point import PlotPoint
 from storylinerlib.storyliner_globals import AC_ROOT
 from storylinerlib.storyliner_globals import ARC_POINT_PREFIX
 from storylinerlib.storyliner_globals import ARC_PREFIX
@@ -69,9 +69,9 @@ class SlModel:
         index = 'end'
         if targetNode.startswith(ARC_PREFIX):
             index = self.tree.index(targetNode) + 1
-        acId = create_id(self.story.arcs, prefix=ARC_PREFIX)
-        self.story.arcs[acId] = Arc(
-            title=kwargs.get('title', f'{_("New Arc")} ({acId})'),
+        acId = create_id(self.story.plotLines, prefix=ARC_PREFIX)
+        self.story.plotLines[acId] = PlotLine(
+            title=kwargs.get('title', f'{_("New PlotLine")} ({acId})'),
             desc='',
             shortName=acId,
             notes='',
@@ -163,8 +163,8 @@ class SlModel:
         else:
             return
 
-        tpId = create_id(self.story.turningPoints, prefix=ARC_POINT_PREFIX)
-        self.story.turningPoints[tpId] = TurningPoint(
+        tpId = create_id(self.story.plotPoints, prefix=ARC_POINT_PREFIX)
+        self.story.plotPoints[tpId] = PlotPoint(
             title=kwargs.get('title', f'{_("New Turning point")} ({tpId})'),
             desc='',
             notes='',
@@ -195,25 +195,25 @@ class SlModel:
             del self.story.characters[elemId]
         elif elemId.startswith(BOOK_PREFIX):
             # Delete a book and remove references.
-            for tpId in self.story.turningPoints:
+            for tpId in self.story.plotPoints:
                 try:
-                    tpBooks = self.story.turningPoints[tpId].books
+                    tpBooks = self.story.plotPoints[tpId].books
                     tpBooks.remove(elemId)
-                    self.story.turningPoints[tpId].books = tpBooks
+                    self.story.plotPoints[tpId].books = tpBooks
                 except:
                     pass
             self.tree.delete(elemId)
             del self.story.books[elemId]
         elif elemId.startswith(ARC_PREFIX):
             # Delete an arc and remove children.
-            del self.story.arcs[elemId]
+            del self.story.plotLines[elemId]
             for tpId in self.tree.get_children(elemId):
-                del self.story.turningPoints[tpId]
+                del self.story.plotPoints[tpId]
                 self.tree.delete(tpId)
             self.tree.delete(elemId)
         elif elemId.startswith(ARC_POINT_PREFIX):
             # Delete an turning point and remove references.
-            del self.story.turningPoints[elemId]
+            del self.story.plotPoints[elemId]
             self.tree.delete(elemId)
 
     def move_node(self, node, targetNode):
@@ -297,9 +297,9 @@ class SlModel:
                     self.story.books[elemId].on_element_change = on_element_change
                 elif elemId.startswith(ARC_PREFIX):
                     initialize_branch(elemId)
-                    self.story.arcs[elemId].on_element_change = on_element_change
+                    self.story.plotLines[elemId].on_element_change = on_element_change
                 elif elemId.startswith(ARC_POINT_PREFIX):
-                    self.story.turningPoints[elemId].on_element_change = on_element_change
+                    self.story.plotPoints[elemId].on_element_change = on_element_change
                 else:
                     initialize_branch(elemId)
 
